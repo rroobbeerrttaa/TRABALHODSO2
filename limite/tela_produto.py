@@ -10,9 +10,12 @@ class TelaProduto(TesteNumeroOpcoes):
                 valor_recebido = input(mensagem)
                 try:
                     valor_recebido_tipo = float(valor_recebido)
-                    return valor_recebido_tipo
+                    if valor_recebido_tipo > 0:
+                        return valor_recebido_tipo
+                    else:
+                        raise ValueError
                 except ValueError:
-                    print("Por favor, escreva somente com numeros. (erro na digitação)")
+                    print("Por favor, escreva somente com numeros e positivos. (erro na digitação)")
 
 
     def teste_do_inteiro(self, mensagem=" "):
@@ -72,4 +75,4 @@ class TelaProduto(TesteNumeroOpcoes):
 
     def mostra_mensagem(self, msg):
         print(msg)
-        print()
+        print("\n")

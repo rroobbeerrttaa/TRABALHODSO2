@@ -48,7 +48,8 @@ class ControladorProdutos():
         try:
             if produto is not None:
                 valor = self.__tela_produto.pega_dados_produto_alterar()
-                produto.preco_venda += float(valor)
+                produto.preco_venda = float(valor)
+                self.__tela_produto.mostra_mensagem("Preço alterado com sucesso!")
             else:
                 raise NaoEncontradoNaListaException("produto")
         except Exception as e:
@@ -63,6 +64,8 @@ class ControladorProdutos():
                 valor = self.__tela_produto.pega_dados_produto_alterar()
                 if valor == int(valor):
                     produto.quant_estoque += int(valor) 
+                    self.__tela_produto.mostra_mensagem("Estoque alterado com sucesso!")
+
                 else:
                     self.__tela_produto.mostra_mensagem("Coloque um valor inteiro!")
             else:

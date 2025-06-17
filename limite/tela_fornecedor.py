@@ -28,7 +28,7 @@ class TelaFornecedor(TesteNumeroOpcoes):
                 else:
                     raise ValueError
             except ValueError:
-                print("Por favor, escreva somente com numeros inteiros. Exemplo 1234 (erro na digitação)")
+                print("Por favor, escreva somente com numeros inteiros e com 8 digitos. Exemplo 1234 (erro na digitação)")
             
     def teste_do_float(self, mensagem=" "):
         while True:
@@ -69,6 +69,7 @@ class TelaFornecedor(TesteNumeroOpcoes):
         celular = self.teste_do_inteiro("Celular: ")
         produto = self.teste_do_inteiro("Código do produto: ")
         preco = self.teste_do_float("Preço: ")
+        print("\n")
         return {
             "nome": nome,
             "cnpj": cnpj,
@@ -91,7 +92,7 @@ class TelaFornecedor(TesteNumeroOpcoes):
             for endereco in dados_fornecedor['enderecos']:
                 print("- Rua: {}, Numero: {}, CEP:{}".format(endereco['rua'], endereco['numero'], endereco['cep']))
         else:
-            print("\nFornecedor sem endereços cadastrados.")
+            print("Fornecedor sem endereços cadastrados.")
         print("\n")
 
     def pega_dados_endereco(self):
@@ -103,12 +104,15 @@ class TelaFornecedor(TesteNumeroOpcoes):
         return {"cep": cep, "rua": rua, "numero": numero}
 
     def seleciona_fornecedor(self):
+        cnpj = self.teste_do_cnpj("Digite o CNPJ do fornecedor: ")
         print("\n")
-        return input("Digite o CNPJ do fornecedor: ")
+        return cnpj
 
     def seleciona_endereco(self):
+        cep = self.teste_do_cep("Digite o cep que deseja: ")
         print("\n")
-        return input("Digite o CEP do endereço: ")
+        return cep
 
     def mostra_mensagem(self, msg):
         print(msg)
+        print("\n")
