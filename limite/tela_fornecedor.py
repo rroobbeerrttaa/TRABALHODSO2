@@ -12,7 +12,7 @@ class TelaFornecedor(TesteNumeroOpcoes):
             try:
                 valor_recebido_tipo = int(valor_recebido)
                 if len(valor_recebido) == 14:
-                    return valor_recebido_tipo
+                    return valor_recebido
                 else:
                     raise ValueError
             except ValueError:
@@ -24,7 +24,7 @@ class TelaFornecedor(TesteNumeroOpcoes):
             try:
                 valor_recebido_tipo = int(valor_recebido)
                 if len(valor_recebido) == 8:
-                    return valor_recebido_tipo
+                    return valor_recebido
                 else:
                     raise ValueError
             except ValueError:
@@ -83,6 +83,7 @@ class TelaFornecedor(TesteNumeroOpcoes):
         print(f"CNPJ: {dados_fornecedor['cnpj']}")
         print(f"Celular: {dados_fornecedor['celular']}")
         print(f"Produto: {dados_fornecedor['produto']}")
+        print(f"Produto código: {dados_fornecedor['produto_codigo']}")
         print(f"Preço: R${float(dados_fornecedor['preco']):.2f}")
         
         if dados_fornecedor['enderecos']:

@@ -21,6 +21,7 @@ class TelaPessoa(TesteNumeroOpcoes):
         while True:
             valor_recebido = input(mensagem)
             try:
+                valor_recebido_tipo = int(valor_recebido)
                 if len(valor_recebido) == 11:
                     return valor_recebido
                 else:

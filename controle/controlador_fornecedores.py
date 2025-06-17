@@ -13,8 +13,8 @@ class ControladorFornecedores:
 
         caneca = Produto("caneca", 1, 20.00, 10) 
         camisa = Produto('camisa', 2, 40.00, 6)
-        gumege = Fornecedor("Gumege Alumínios", "11112222000100", "48999887766", caneca, 10.00)
-        somar = Fornecedor("Somar Tecidos", "33334444000100", "47988776655", camisa, 25.00)
+        gumege = Fornecedor("Gumege Alumínios", "11112222000100", 48999887766, caneca, 10.00)
+        somar = Fornecedor("Somar Tecidos", "33334444000100", 47988776655, camisa, 25.00)
         self.__fornecedores.append(gumege)
         self.__fornecedores.append(somar)
 
@@ -40,7 +40,7 @@ class ControladorFornecedores:
                 if self.pega_fornecedor_por_cnpj(dados_fornecedor["cnpj"]) is None:
                     fornecedor = Fornecedor(
                         str(dados_fornecedor["nome"]),
-                        int(dados_fornecedor["cnpj"]),
+                        str(dados_fornecedor["cnpj"]),
                         int(dados_fornecedor["celular"]),
                         objeto_produto,
                         float(dados_fornecedor["preco"]) 
@@ -55,7 +55,7 @@ class ControladorFornecedores:
             self.__tela_fornecedor.mostra_mensagem(e)
 
     def alterar_fornecedor(self):
-        self.lista_fornecedores
+        self.lista_fornecedores()
         cnpj_fornecedor = self.__tela_fornecedor.seleciona_fornecedor()
         fornecedor = self.pega_fornecedor_por_cnpj(cnpj_fornecedor)       
         try:
@@ -64,7 +64,7 @@ class ControladorFornecedores:
                 fornecedor_copiado = self.pega_fornecedor_por_cnpj(novos_dados_fornecedor["cnpj"])       
                 novo_codigo_produto = int(novos_dados_fornecedor["produto"])
                 novo_produto = self.__controlador_sistema.controlador_produtos.pega_produto_por_codigo(novo_codigo_produto)
-                if fornecedor_copiado is None or (fornecedor_copiado == cnpj_fornecedor):
+                if fornecedor_copiado is None or (fornecedor_copiado.numero == cnpj_fornecedor):
                     if novo_produto is not None:
                         fornecedor.nome = novos_dados_fornecedor["nome"]
                         fornecedor.numero = novos_dados_fornecedor["cnpj"]
@@ -122,6 +122,7 @@ class ControladorFornecedores:
                          "cnpj": fornecedor.numero,
                          "celular": fornecedor.celular,
                          "produto": fornecedor.produto.nome,
+                         "produto_codigo": fornecedor.produto.codigo_produto,
                          "preco": fornecedor.preco,
                          "enderecos": enderecos}
                 self.__tela_fornecedor.mostra_fornecedor(dados)
@@ -153,7 +154,7 @@ class ControladorFornecedores:
                     endereco_remover = endereco
                     break
             if endereco_remover:
-                fornecedor.enderecos.remove(endereco_remover)
+                fornecedor.remover_endereco(endereco_remover)
                 self.__tela_fornecedor.mostra_mensagem("Endereço excluído com sucesso!")
                 self.lista_fornecedores()
             else:

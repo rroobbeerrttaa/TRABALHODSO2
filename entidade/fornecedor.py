@@ -3,7 +3,7 @@ from entidade.endereco import Endereco
 from entidade.pessoa import Pessoa
 
 class Fornecedor(Pessoa):
-    def __init__(self, nome: str, numero: str, celular: str, produto: Produto, preco: float):
+    def __init__(self, nome: str, numero: str, celular: int, produto: Produto, preco: float):
         super().__init__(nome, numero, celular)
         self.__produto = produto
         self.__preco = preco
@@ -31,3 +31,7 @@ class Fornecedor(Pessoa):
 
     def incluir_endereco(self, cep: str, rua: str, numero: str):
         self.__enderecos.append(Endereco(cep, rua, numero))
+
+    def remover_endereco(self, endereco: Endereco):
+        self.__enderecos.remove(endereco)
+
