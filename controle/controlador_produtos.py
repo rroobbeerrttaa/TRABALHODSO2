@@ -27,6 +27,8 @@ class ControladorProdutos():
 
     def incluir_produto(self):
         dados_produto = self.__tela_produto.pega_dados_produto()
+        if dados_produto == 0:
+            return None
         i = self.pega_produto_por_codigo(dados_produto["codigo_produto"])
         try:
             if i is None:
@@ -43,11 +45,17 @@ class ControladorProdutos():
 
     def alterar_preco_produto(self):
         self.lista_produtos()
+        if len(self.__produtos) == 0:
+            return None
         codigo_produto = self.__tela_produto.seleciona_produto()
+        if codigo_produto == 0:
+            return None
         produto = self.pega_produto_por_codigo(codigo_produto)
         try:
             if produto is not None:
                 valor = self.__tela_produto.pega_dados_produto_alterar()
+                if valor == 0 or valor is None:
+                    return 
                 produto.preco_venda = float(valor)
                 self.__tela_produto.mostra_mensagem("Preço alterado com sucesso!")
             else:
@@ -57,37 +65,49 @@ class ControladorProdutos():
 
     def alterar_estoque(self):
         self.lista_produtos()
+        if len(self.__produtos) == 0:
+            return None
         codigo_produto = self.__tela_produto.seleciona_produto()
+        if codigo_produto == 0 or codigo_produto is None:
+            return None
         produto = self.pega_produto_por_codigo(codigo_produto)
         try:
             if produto is not None:
                 valor = self.__tela_produto.pega_dados_produto_alterar()
-                if valor == int(valor):
-                    produto.quant_estoque += int(valor) 
+                if valor == 0 or valor is None:
+                    return
+                if isinstance(valor, float) and valor.is_integer():
+                    produto.quant_estoque += int(valor)
                     self.__tela_produto.mostra_mensagem("Estoque alterado com sucesso!")
-
                 else:
                     self.__tela_produto.mostra_mensagem("Coloque um valor inteiro!")
             else:
-                raise NaoEncontradoNaListaException()
+                raise NaoEncontradoNaListaException("produto")
         except Exception as e:
             self.__tela_produto.mostra_mensagem(e)
 
     def lista_produtos(self):
         if len(self.__produtos) == 0:
-            self.__tela_produto.mostra_mensagem("Não há produtos cadastrados.")
+            self.__tela_produto.mostra_mensagem("Não exite produtos cadastrados!")
             return None
         else:
-            self.__tela_produto.mostra_mensagem("-------- PRODUTOS CADASTRADOS ----------")
+            dados_produto = []
             for produto in self.__produtos:
-                self.__tela_produto.mostra_produto({"nome": produto.nome,
-                                                    "codigo_produto": produto.codigo_produto,
-                                                    "preco_venda": produto.preco_venda,
-                                                    "quant_estoque": produto.quant_estoque})
+                dado = {"nome": produto.nome,
+                         "codigo_produto": produto.codigo_produto,
+                         "preco_venda": produto.preco_venda,
+                         "quant_estoque": produto.quant_estoque}
+                dados_produto.append(dado)
+
+            self.__tela_produto.mostra_produto(dados_produto)
 
     def excluir_produto(self):
         self.lista_produtos()
+        if len(self.__produtos) == 0:
+            return None
         codigo_produto = int(self.__tela_produto.seleciona_produto())
+        if codigo_produto == 0:
+            return None
         produto = self.pega_produto_por_codigo(codigo_produto)
         try:
             if produto is not None:
@@ -114,4 +134,4 @@ class ControladorProdutos():
             if opcao_escolhida in lista_opcoes:
                 lista_opcoes[opcao_escolhida]()
             else:
-                self.__tela_produto.mostra_mensagem("Opção inválida, digite novamente.")
+                self.__tela_produto.mostra_mensagem("Opção inválida, escolha novamente\nA possivél causa é a a confirmação sem ter selecionado nada.")

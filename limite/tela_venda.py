@@ -80,7 +80,7 @@ class TelaVenda(TesteNumeroOpcoes):
         print("CLIENTE:", dados_venda["cliente"])
         print("NOME DO PRODUTO:", dados_venda["produto"])
         print("QUANTIDADE:", dados_venda["quantidade"])
-        print(f"VALOR TOTAL DA VENDA: R${dados_venda["valor"]:.2f}")
+        print(f"VALOR TOTAL DA VENDA: R${float(dados_venda['valor']):.2f}")     
         print()
 
     def seleciona_venda(self):

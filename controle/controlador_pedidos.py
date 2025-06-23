@@ -20,6 +20,8 @@ class ControladorPedidos():
         self.__controlador_sistema.controlador_produtos.lista_produtos()
 
         dados_pedido = self.__tela_pedido.pega_dados_pedido()
+        if dados_pedido == 0:
+            return  
         codigo_pedido = self.pega_pedido_por_codigo(dados_pedido["codigo"])
         try:
             if codigo_pedido is None:
@@ -51,54 +53,62 @@ class ControladorPedidos():
 
     def alterar_pedido(self):
         self.lista_pedidos()
+        if len(self.__pedidos) == 0:
+            return 
         codigo_pedido = self.__tela_pedido.seleciona_pedido()
+        if codigo_pedido == 0:
+            return
         pedido = self.pega_pedido_por_codigo(codigo_pedido)
         try:
             if pedido is not None:
                 self.__controlador_sistema.controlador_fornecedores.lista_fornecedores()
                 self.__controlador_sistema.controlador_produtos.lista_produtos()
                 novos_dados = self.__tela_pedido.altera_dados_pedidos()
-                novo_fornecedor = self.__controlador_sistema.controlador_fornecedores.pega_fornecedor_por_cnpj(novos_dados["cnpj"])
-                if novo_fornecedor is not None:
-                    novo_produto = self.__controlador_sistema.controlador_produtos.pega_produto_por_codigo(novos_dados["codigo_produto"])
-                    if (novo_produto is not None) and (novo_produto.codigo_produto == novo_fornecedor.produto.codigo_produto):
-                        produto_antigo = pedido.produto
-                        produto_antigo.quant_estoque -= pedido.quantidade
-                        novo_valor = (float(novos_dados["quantidade"]) * float(novo_fornecedor.preco) + float(novos_dados["valor_frete"]))
-            
-                        pedido.quantidade = int(novos_dados["quantidade"])
-                        pedido.produto = novo_produto
-                        pedido.data = novos_dados["data"]
-                        pedido.valor = novo_valor
-                        pedido.fornecedor = novo_fornecedor
-                        pedido.frete = float(novos_dados["valor_frete"])
-                        pedido.prazo_entrega = int(novos_dados["prazo_entrega"])
-                        
-                        novo_produto.quant_estoque += int(novos_dados["quantidade"])
-                        
-                        self.__tela_pedido.mostra_mensagem("Pedido alterado com sucesso!")
-                    else:
-                        raise NaoEncontradoNaListaException("produto")
+                if novos_dados == 0:
+                    return 
                 else:
-                    raise NaoEncontradoNaListaException("fornecedor")
+                    novo_fornecedor = self.__controlador_sistema.controlador_fornecedores.pega_fornecedor_por_cnpj(novos_dados["cnpj"])
+                    if novo_fornecedor is not None:
+                        novo_produto = self.__controlador_sistema.controlador_produtos.pega_produto_por_codigo(novos_dados["codigo_produto"])
+                        if (novo_produto is not None) and (novo_produto.codigo_produto == novo_fornecedor.produto.codigo_produto):
+                            produto_antigo = pedido.produto
+                            produto_antigo.quant_estoque -= pedido.quantidade
+                            novo_valor = (float(novos_dados["quantidade"]) * float(novo_fornecedor.preco) + float(novos_dados["valor_frete"]))
+                
+                            pedido.quantidade = int(novos_dados["quantidade"])
+                            pedido.produto = novo_produto
+                            pedido.data = novos_dados["data"]
+                            pedido.valor = novo_valor
+                            pedido.fornecedor = novo_fornecedor
+                            pedido.frete = float(novos_dados["valor_frete"])
+                            pedido.prazo_entrega = int(novos_dados["prazo_entrega"])
+                            
+                            novo_produto.quant_estoque += int(novos_dados["quantidade"])
+                            
+                            self.__tela_pedido.mostra_mensagem("Pedido alterado com sucesso!")
+                        else:
+                            raise NaoEncontradoNaListaException("produto")
+                    else:
+                        raise NaoEncontradoNaListaException("fornecedor")
             else:
                 raise NaoEncontradoNaListaException("pedido")
-            
         except Exception as e:
             self.__tela_pedido.mostra_mensagem(e)
 
     def lista_pedidos(self):
         if len(self.__pedidos) != 0:
+            dados_pedidos = []
             for pedido in self.__pedidos:
-                pedido = ({"codigo": pedido.codigo,
+                pedido = {"codigo": pedido.codigo,
                         "quantidade": pedido.quantidade,
                         "nome_produto": pedido.produto.nome,
                         "data": pedido.data,
                         "valor": pedido.valor,
                         "nome_fornecedor": pedido.fornecedor.nome, 
                         "frete": pedido.frete,
-                        "prazo_entrega": pedido.prazo_entrega})
-                self.__tela_pedido.mostra_pedidos(pedido)
+                        "prazo_entrega": pedido.prazo_entrega}
+                dados_pedidos.append(pedido)
+            self.__tela_pedido.mostra_pedidos(dados_pedidos)
         else:
             self.__tela_pedido.mostra_mensagem("Não exite pedidos feitos!")
 
@@ -106,6 +116,8 @@ class ControladorPedidos():
         if len(self.__pedidos) != 0:
             self.lista_pedidos()
             codigo_pedido = self.__tela_pedido.seleciona_pedido()
+            if codigo_pedido == 0:
+                return 
             pedido = self.pega_pedido_por_codigo(codigo_pedido)
             try:
                 if pedido is not None:
@@ -119,6 +131,7 @@ class ControladorPedidos():
                 self.__tela_pedido.mostra_mensagem(e)
         else:
             self.__tela_pedido.mostra_mensagem("Não exite pedidos para remover!")
+            return 
 
     def retornar(self):
         self.__controlador_sistema.abre_tela()
